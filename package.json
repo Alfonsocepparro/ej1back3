@@ -15,7 +15,9 @@
     "@faker-js/faker": "^9.8.0",
     "bcrypt": "^6.0.0",
     "express": "^5.1.0",
-    "mongoose": "^8.16.1"
+    "mongoose": "^8.16.1",
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"

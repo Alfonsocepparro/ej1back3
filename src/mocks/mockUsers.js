@@ -1,21 +1,38 @@
-import bcrypt from "bcrypt";
-import { faker } from "@faker-js/faker";
+import { Router } from 'express'
+import { faker } from '@faker-js/faker'
+import { ObjectId } from 'mongodb'
 
-export const generateMockUsers = async (count) => {
-  const users = [];
+const router = Router()
 
-  const hashedPassword = await bcrypt.hash("coder123", 10);
+router.get('/mockingusers', (req, res) => {
+ 
 
-  for (let i = 0; i < count; i++) {
-    users.push({
-      first_name: faker.person.firstName(),
-      last_name: faker.person.lastName(),
-      email: faker.internet.email(),
-      password: hashedPassword,
-      role: faker.helpers.arrayElement(["user", "admin"]),
-      pets: []
-    });
+  const count = parseInt(req.query.count) || 100
+
+  if (isNaN(count) || count <= 0) {
+    return res.status(400).json({ error: 'El parámetro count debe ser un número positivo' })
   }
 
-  return users;
-};
+  try {
+    const users = []
+
+    for (let i = 0; i < count; i++) {
+      users.push({
+        _id: new ObjectId(), // ID falso manual
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        email: faker.internet.email(),
+        password: faker.internet.password(),
+        role: faker.helpers.arrayElement(['user', 'admin']),
+        pets: []
+      })
+    }
+
+    res.json({ users })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Error al generar los usuarios mockeados' })
+  }
+})
+
+export default router

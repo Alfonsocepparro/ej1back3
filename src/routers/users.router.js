@@ -3,7 +3,29 @@ import { User } from "../models/UserModel.js";
 
 const router = express.Router();
 
-/* GET*/
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: Endpoints para gestionar usuarios
+ */
+
+/**
+ * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Obtener todos los usuarios
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: Lista de usuarios
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ */
 router.get("/", async (req, res) => {
   try {
     const users = await User.find();
@@ -13,7 +35,25 @@ router.get("/", async (req, res) => {
   }
 });
 
-/* GET id*/
+/**
+ * @swagger
+ * /api/users/{uid}:
+ *   get:
+ *     summary: Obtener un usuario por ID
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: uid
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del usuario
+ *     responses:
+ *       200:
+ *         description: Usuario encontrado
+ *       404:
+ *         description: Usuario no encontrado
+ */
 router.get("/:uid", async (req, res) => {
   try {
     const user = await User.findById(req.params.uid);
@@ -24,7 +64,39 @@ router.get("/:uid", async (req, res) => {
   }
 });
 
-/* POST*/
+/**
+ * @swagger
+ * /api/users:
+ *   post:
+ *     summary: Crear un nuevo usuario
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               first_name:
+ *                 type: string
+ *               last_name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *               pets:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *     responses:
+ *       201:
+ *         description: Usuario creado
+ *       400:
+ *         description: Faltan campos obligatorios
+ */
 router.post("/", async (req, res) => {
   const { first_name, last_name, email, password, role, pets } = req.body;
   if (!first_name || !last_name || !email || !password) {
@@ -39,8 +111,25 @@ router.post("/", async (req, res) => {
   }
 });
 
-
-/* DELETE */
+/**
+ * @swagger
+ * /api/users/{uid}:
+ *   delete:
+ *     summary: Eliminar un usuario por ID
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: uid
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del usuario a eliminar
+ *     responses:
+ *       200:
+ *         description: Usuario eliminado
+ *       404:
+ *         description: Usuario no encontrado
+ */
 router.delete("/:uid", async (req, res) => {
   try {
     const deleted = await User.findByIdAndDelete(req.params.uid);
